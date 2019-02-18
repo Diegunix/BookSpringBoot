@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:p="http://primefaces.org/ui">
+<ui:composition template="layout.xhtml">
+
+    <ui:define name="content">
+        <h:form id="bookForm" prependId="false">
+            <p:fieldset legend="Create a New Book">
+                <h:panelGrid id="grid" columns="3" border="0" layout="grid" style="margin: 20px;">
+                    <h:outputLabel for="title" value="Title:" style="font-weight:bold" />
+                    <p:inputText id="title" value="#{book.title}" required="true" label="Title">
+                        <f:validateLength minimum="2" />
+                    </p:inputText>
+                    <p:message for="title" display="icon" />
+
+                    <h:outputLabel for="price" value="Price:" style="font-weight:bold" />
+                    <p:inputText id="price" value="#{book.price}" converterMessage="Cannot convert to double.">
+                        <f:validateDoubleRange minimum="0.0" maximum="999999.9" />
+                    </p:inputText>
+                    <p:message for="price" display="icon" />
+
+                    <h:outputLabel for="description" value="Description:" style="font-weight:bold" />
+                    <p:inputTextarea id="description" value="#{book.description}" cols="20" rows="3" />
+                    <p:message for="description" display="icon" />
+
+                    <h:outputLabel for="nbop" value="Number of pages:" style="font-weight:bold" />
+                    <p:inputText id="nbop" value="#{book.nbofpage}" label="Number of pages">
+                        <f:validateDoubleRange minimum="0" maximum="99999" />
+                    </p:inputText>
+                    <p:message for="nbop" display="icon" />
+
+                    <h:outputLabel for="ill" value="Illustrations:" style="font-weight:bold" />
+                    <p:selectBooleanCheckbox id="ill" value="#{book.illustrations}" />
+
+                    <f:facet name="footer">
+                        <h:panelGroup style="display:block; text-align:center">
+                            <p:commandButton id="saveButton" update="grid,booklist" value="Save" ajax="false"
+                                actionListener="#{model.doCreateBook()}" icon="pi pi-check" style="margin-right:10px" />
+                        </h:panelGroup>
+                    </f:facet>
+                </h:panelGrid>
+            </p:fieldset>
+            <br />
+
+                <p:dataTable id="booklist" value="#{model.findAllBooks()}" selectionMode="single" selection="#{model.bookSelected}" var="bk" border="1" rowKey="#{bk.id}">
+                 <p:ajax event="rowSelect" listener="#{model.selectedBook()}"  />
+                    <f:facet name="header"> List of books </f:facet>
+                    <p:column headerText="Title">
+                         <h:outputText id="lblDataTitle" value="#{bk.title}" />
+                    </p:column>
+                    <p:column headerText="Price">
+                        <h:outputText value="#{bk.price}" />
+                    </p:column>
+                </p:dataTable>
+        </h:form>
+    </ui:define>
+
+</ui:composition>
+</html>
